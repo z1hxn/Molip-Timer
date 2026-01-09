@@ -1,0 +1,12 @@
+:root {
+  --bs-body-font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui;
+}
