@@ -1,0 +1,3 @@
+export { default as Home } from "./Home";
+export { default as Timer } from "./Timer";
+export { default as Settings } from "./Settings";

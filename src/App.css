@@ -7,3 +7,113 @@
 .App {
   text-align: center;
 }
+.timer-wrapper {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f7f7fb;
+}
+
+.timer-card {
+  background: white;
+  padding: 48px 56px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+  text-align: center;
+  min-width: 320px;
+}
+
+.timer-time {
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 32px;
+  font-family: 'Inter', 'Pretendard', sans-serif;
+  width: 280px;
+  margin: 0 auto 32px;
+}
+
+.timer-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn.primary.start {
+  background: #4f46e5; /* 집중 블루 */
+  color: white;
+}
+
+.btn.primary.stop {
+  background: #ef4444; /* 정지 레드 */
+  color: white;
+}
+
+.btn.ghost {
+  background: transparent;
+  color: #555;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+.home-wrapper {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f7f7fb;
+}
+
+.home-card {
+  background: white;
+  padding: 56px 64px;
+  border-radius: 24px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.06);
+  max-width: 720px;
+  text-align: center;
+}
+
+.home-title {
+  font-size: 42px;
+  font-weight: 800;
+  margin-bottom: 28px;
+  letter-spacing: -0.5px;
+}
+
+.home-desc {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #444;
+  margin-bottom: 16px;
+}
+
+.home-desc strong {
+  color: #4f46e5; /* 타이머랑 같은 포인트 컬러 */
+}
+
+.home-btn {
+  margin-top: 32px;
+  padding: 14px 36px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 16px;
+  background: #4f46e5;
+  border: none;
+}
+
+.home-btn:hover {
+  background: #4338ca;
+}

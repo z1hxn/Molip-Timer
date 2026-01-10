@@ -17,8 +17,10 @@ function Header() {
           />몰입 타이머</Navbar.Brand>
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link onClick={()=>{ navigate('/')}}>홈</Nav.Link>
-            <Nav.Link onClick={()=>{ navigate('/timer')}}>타이머</Nav.Link>
+
+            <Nav.Link onClick={() => { navigate('/') }}>홈</Nav.Link>
+            <Nav.Link onClick={() => { navigate('/timer') }}>타이머</Nav.Link>
+            <Nav.Link onClick={() => { navigate('/settings') }}>설정</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
