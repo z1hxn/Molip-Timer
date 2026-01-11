@@ -7,113 +7,180 @@
 .App {
   text-align: center;
 }
-.timer-wrapper {
+
+.page-center {
   min-height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f7f7fb;
+}
+
+/* ===== Timer + AI Layout ===== */
+
+.timer-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 32px;
+  width: 100%;
+  max-width: 1100px;
+  padding: 32px;
+}
+
+.ai-panel {
+  background: #f7f8fc;
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ai-video {
+  background: #ddd;
+  border-radius: 12px;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.ai-status {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ef4444;
+}
+
+.ai-countdown {
+  font-size: 18px;
+  color: #555;
+}
+
+.ai-countdown strong {
+  font-size: 28px;
+  color: #ef4444;
+}
+
+.quote {
+  margin-top: auto;
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+}
+
+.card {
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.06);
+  text-align: center;
 }
 
 .timer-card {
-  background: white;
-  padding: 48px 56px;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
-  text-align: center;
-  min-width: 320px;
+  padding: 56px 56px 48px;
+  min-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .timer-time {
-  font-size: 56px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  margin-bottom: 32px;
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  margin: 24px 0 40px;
   font-family: 'Inter', 'Pretendard', sans-serif;
-  width: 280px;
-  margin: 0 auto 32px;
 }
 
 .timer-buttons {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   justify-content: center;
+  margin-bottom: 24px;
 }
+
+.timer-settings-text {
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: #999;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.timer-settings-text:hover {
+  color: #4f46e5;
+}
+
+/* ===== Button System ===== */
 
 .btn {
   border: none;
   border-radius: 999px;
-  padding: 12px 28px;
-  font-size: 15px;
+  padding: 14px 36px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
-.btn.primary.start {
-  background: #4f46e5; /* 집중 블루 */
+/* Motion (all buttons) */
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Variants */
+.btn-primary {
+  background: #4f46e5;
   color: white;
 }
 
-.btn.primary.stop {
-  background: #ef4444; /* 정지 레드 */
+.btn-danger {
+  background: #ef4444;
   color: white;
 }
 
-.btn.ghost {
+.btn-ghost {
   background: transparent;
   color: #555;
 }
 
-.btn:hover {
-  transform: translateY(-1px);
-  opacity: 0.95;
+/* Size variants (optional, future-proof) */
+.btn-sm {
+  padding: 10px 22px;
+  font-size: 14px;
 }
-.home-wrapper {
-  min-height: 70vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f7f7fb;
+
+.btn-lg {
+  padding: 16px 44px;
+  font-size: 18px;
 }
 
 .home-card {
-  background: white;
   padding: 56px 64px;
-  border-radius: 24px;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.06);
   max-width: 720px;
-  text-align: center;
 }
 
-.home-title {
+.title {
   font-size: 42px;
   font-weight: 800;
   margin-bottom: 28px;
   letter-spacing: -0.5px;
 }
 
-.home-desc {
+.description {
   font-size: 16px;
   line-height: 1.7;
   color: #444;
   margin-bottom: 16px;
 }
 
-.home-desc strong {
-  color: #4f46e5; /* 타이머랑 같은 포인트 컬러 */
-}
-
-.home-btn {
-  margin-top: 32px;
-  padding: 14px 36px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 16px;
-  background: #4f46e5;
-  border: none;
-}
-
-.home-btn:hover {
-  background: #4338ca;
+.description strong {
+  color: #4f46e5;
 }
