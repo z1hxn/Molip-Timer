@@ -76,10 +76,10 @@ function Timer() {
           <div className="ai-video" />
           <div className="ai-status">미집중</div>
           <div className="ai-countdown">
-            타이머 정지까지 <strong>26</strong>
+            타이머 정지까지 <strong>16</strong>
           </div>
           <div className="ai-quote">
-            "지금 이 순간이 가장 소중하다."
+            "지금 이 순간이 가장 소중하다"
           </div>
         </div>
 

@@ -1,6 +1,5 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import * as tf from "@tensorflow/tfjs";
 import { Home, Timer, Settings } from "./pages";
 import Header from "./components/Header.tsx";
 
