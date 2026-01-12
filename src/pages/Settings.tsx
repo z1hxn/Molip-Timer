@@ -1,9 +1,23 @@
 import { useState } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
 
+function applySettings(
+  newName: string,
+  pauseMinutes: number,
+  setName: (v: string) => void
+) {
+  const finalName = newName.trim() || 'Guest';
+  setName(finalName);
+  localStorage.setItem('nickname', finalName);
+  localStorage.setItem('pauseMinutes', String(pauseMinutes));
+  alert('설정이 저장되었습니다.');
+}
+
 function Settings() {
-  const [name, setName] = useState('Guest');
-  const [inputName, setInputName] = useState('');
+  const savedName = localStorage.getItem('nickname') || 'Guest';
+  const [name, setName] = useState(savedName);
+  const [inputName, setInputName] = useState(savedName);
+  const [pauseMinutes, setPauseMinutes] = useState<number>(5);
 
   return (
     <div className="page-center">
@@ -26,12 +40,23 @@ function Settings() {
           />
         </InputGroup>
 
+        <Form.Group className="mb-3">
+          <Form.Label>미집중 시 자동 정지 시간</Form.Label>
+          <Form.Select
+            value={pauseMinutes}
+            onChange={(e) => setPauseMinutes(Number(e.target.value))}
+          >
+            <option value={3}>3분</option>
+            <option value={5}>5분</option>
+            <option value={10}>10분</option>
+            <option value={15}>15분</option>
+          </Form.Select>
+        </Form.Group>
+
         <button
           className="btn btn-primary btn-sm"
           onClick={() => {
-            setName(inputName);
-            localStorage.setItem('nickname', inputName);
-            alert(`닉네임이 변경되었습니다, ${inputName}님!`);
+            applySettings(inputName, pauseMinutes, setName);
           }}
         >
           저장

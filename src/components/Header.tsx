@@ -21,6 +21,7 @@ function Header() {
             <Nav.Link onClick={() => { navigate('/') }}>홈</Nav.Link>
             <Nav.Link onClick={() => { navigate('/timer') }}>타이머</Nav.Link>
             <Nav.Link onClick={() => { navigate('/settings') }}>설정</Nav.Link>
+            <Nav.Link onClick={() => { navigate('./history')}}>기록</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

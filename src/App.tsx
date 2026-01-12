@@ -1,6 +1,6 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { Home, Timer, Settings } from "./pages";
+import { Home, Timer, Settings, History } from "./pages";
 import Header from "./components/Header.tsx";
 
 function App() {
@@ -12,6 +12,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/timer" element={<Timer />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/history" element={<History />} />
       </Routes>
     </div>
   );

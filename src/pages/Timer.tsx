@@ -1,65 +1,31 @@
-import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTimer } from '../features/timer/model/useTimer';
 
 function Timer() {
   const navigate = useNavigate();
+  const nickname = localStorage.getItem('nickname') || 'Guest';
 
-  const [time, setTime] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-  const timerRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (isRunning) {
-      timerRef.current = window.setInterval(() => {
-        setTime(prev => prev + 1);
-      }, 1000);
-    } else {
-      if (timerRef.current !== null) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
-    }
-
-    return () => {
-      if (timerRef.current !== null) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
-    };
-  }, [isRunning]);
-
-  const handleToggle = () => {
-    setIsRunning(prev => !prev);
-  };
-
-  const handleReset = () => {
-    setIsRunning(false);
-    setTime(0);
-  };
-
-  const formatTime = (seconds: number) => {
-    const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
-    const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-    const s = String(seconds % 60).padStart(2, '0');
-    return `${h}:${m}:${s}`;
-  };
+  const { time, isRunning, toggle, reset, formatTime } = useTimer();
 
   return (
     <div className="page-center">
       <div className="timer-layout">
 
         <div className="card timer-card">
+          <div className="timer-nickname">
+            {nickname}
+          </div>
           <div className="timer-time">{formatTime(time)}</div>
 
           <div className="timer-buttons">
             <button
               className={`btn ${isRunning ? 'btn-danger' : 'btn-primary'}`}
-              onClick={handleToggle}
+              onClick={toggle}
             >
               {isRunning ? '정지' : '시작'}
             </button>
 
-            <button className="btn btn-ghost" onClick={handleReset}>
+            <button className="btn btn-ghost" onClick={reset}>
               리셋
             </button>
           </div>

@@ -184,3 +184,16 @@
 .description strong {
   color: #4f46e5;
 }
+
+.timer-card {
+  position: relative;
+}
+
+.timer-nickname {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-size: 13px;
+  color: #999;
+  font-weight: 500;
+}
