@@ -3,5 +3,24 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+
+    "@pages": ["src/pages/index.ts"],
+    "@pages/*": ["src/pages/*"],
+
+    "@features": ["src/features/index.ts"],
+    "@features/*": ["src/features/*"],
+
+    "@components": ["src/components/index.ts"],
+    "@components/*": ["src/components/*"],
+    
+    "@shared/*": ["src/shared/*"],
+
+    "@UI/*": ["src/UI/*"],
+    }
+  }
 }
+

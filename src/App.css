@@ -178,7 +178,7 @@
   font-size: 16px;
   line-height: 1.7;
   color: #444;
-  margin-bottom: 16px;
+  margin-bottom: 25px;
 }
 
 .description strong {
@@ -196,4 +196,28 @@
   font-size: 13px;
   color: #999;
   font-weight: 500;
+}
+
+.home-logo {
+  width: 96px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+/* ===== Error Page ===== */
+
+.error-code {
+  display: block;
+  font-size: 80px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.error-title {
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 30px;
 }

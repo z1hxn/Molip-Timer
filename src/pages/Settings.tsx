@@ -46,10 +46,10 @@ function Settings() {
             value={pauseMinutes}
             onChange={(e) => setPauseMinutes(Number(e.target.value))}
           >
-            <option value={3}>3분</option>
-            <option value={5}>5분</option>
-            <option value={10}>10분</option>
-            <option value={15}>15분</option>
+            <option value={3}>15초</option>
+            <option value={5}>30초</option>
+            <option value={10}>1분</option>
+            <option value={15}>2분</option>
           </Form.Select>
         </Form.Group>
 

@@ -6,10 +6,12 @@ function Home() {
   return (
     <div className="page-center">
       <div className="card home-card">
-        <h1 className="title">Molip Timer</h1>
+        <img src="logo.png" className="home-logo"/>
+        <h5>공부가 이어지는 리듬</h5>
+        <h1 className="title">몰입 타이머</h1>
 
         <p className="description">
-          Molip Timer는 학습 중 <strong>‘몰입 상태’</strong>를 인식하여
+          몰입 타이머는 학습 중 <strong>‘몰입 상태’</strong>를 인식하여
           실제로 집중한 시간만을 기록하는 AI 스터디 타이머입니다.
         </p>
 
@@ -23,7 +25,7 @@ function Home() {
         </p>
 
         <button className="btn btn-primary btn-lg" onClick={() => navigate('/timer')}>
-          지금 시작하기
+          지금 몰입하러 가기
         </button>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useTimer } from '../features/timer/model/useTimer';
+import { useTimer } from '@features/timer';
 
 function Timer() {
   const navigate = useNavigate();
@@ -20,9 +20,8 @@ function Timer() {
           <div className="timer-buttons">
             <button
               className={`btn ${isRunning ? 'btn-danger' : 'btn-primary'}`}
-              onClick={toggle}
-            >
-              {isRunning ? '정지' : '시작'}
+              onClick={toggle}>
+              {isRunning ? '정지' : '몰입 시작'}
             </button>
 
             <button className="btn btn-ghost" onClick={reset}>
@@ -32,8 +31,7 @@ function Timer() {
 
           <button
             className="timer-settings-text"
-            onClick={() => navigate('/settings')}
-          >
+            onClick={() => navigate('/settings')}>
             설정
           </button>
         </div>

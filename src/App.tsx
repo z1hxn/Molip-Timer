@@ -1,7 +1,7 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { Home, Timer, Settings, History } from "./pages";
-import Header from "./components/Header.tsx";
+import { Home, Timer, Settings, History, NotFound } from "@pages";
+import { Header } from "@components";
 
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
         <Route path="/timer" element={<Timer />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/history" element={<History />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
