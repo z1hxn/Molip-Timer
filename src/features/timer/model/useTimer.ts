@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-export function useTimer() {
+export function useTimer(focusActive: boolean) {
   const [focusTime, setFocusTime] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
@@ -9,7 +9,9 @@ export function useTimer() {
   useEffect(() => {
     if (isRunning) {
       timerRef.current = window.setInterval(() => {
-        setFocusTime(prev => prev + 1);
+        if (focusActive) {
+          setFocusTime(prev => prev + 1);
+        }
         setTotalTime(prev => prev + 1);
       }, 1000);
     } else {
@@ -25,7 +27,7 @@ export function useTimer() {
         timerRef.current = null;
       }
     };
-  }, [isRunning]);
+  }, [isRunning, focusActive]);
 
   const toggle = () => {
     setIsRunning(prev => !prev);
