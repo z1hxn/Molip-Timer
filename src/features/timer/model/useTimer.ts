@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export function useTimer(focusActive: boolean) {
   const [focusTime, setFocusTime] = useState(0);
@@ -29,15 +29,19 @@ export function useTimer(focusActive: boolean) {
     };
   }, [isRunning, focusActive]);
 
-  const toggle = () => {
+  const toggle = useCallback(() => {
     setIsRunning(prev => !prev);
-  };
+  }, []);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setIsRunning(false);
     setFocusTime(0);
     setTotalTime(0);
-  };
+  }, []);
+
+  const stop = useCallback(() => {
+    setIsRunning(false);
+  }, []);
 
   const formatTime = (seconds: number) => {
     const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
@@ -52,6 +56,7 @@ export function useTimer(focusActive: boolean) {
     isRunning,
     toggle,
     reset,
+    stop,
     formatTime,
   };
 }

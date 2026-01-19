@@ -1,73 +1,54 @@
-# React + TypeScript + Vite
+# Molip Timer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+공부 자세를 판독해 몰입 시간을 따로 집계하는 AI 기반 집중 타이머입니다. React, TypeScript, Vite로 구성되어 있습니다.
 
-Currently, two official plugins are available:
+## 주요 기능
+- 몰입 시간과 총 경과 시간 분리 집계
+- 웹캠 포즈 판독 및 스켈레톤 오버레이
+- 미집중 시 자동 정지 카운트다운
+- 시스템/자동정지 알림 닫기 버튼 지원
+- 닉네임, 자동 정지 시간, 동기부여 문구 설정
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 기술 스택
+- React + TypeScript + Vite
+- Teachable Machine Pose (`@teachablemachine/pose`)
+- TensorFlow.js
+- React Bootstrap
 
-## React Compiler
+## 요구 사항
+- Node.js 18+ 권장
+- 웹캠 접근 권한 필요
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+## 시작하기
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+실행 후 개발 서버 URL에 접속하고 카메라 접근을 허용하세요.
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+## 스크립트
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run preview
 ```
+
+## 설정값 저장
+설정은 `localStorage`에 저장됩니다:
+- `nickname`: 타이머에 표시될 닉네임
+- `pauseSeconds`: 자동 정지 카운트다운(초 단위, 권장)
+- `pauseMinutes`: 자동 정지 레거시 키(대체 매핑)
+- `motivationText`: 타이머 하단에 표시되는 문구
+
+## AI 모델 파일
+Teachable Machine 포즈 모델 파일이 아래 경로에 있어야 합니다:
+```
+public/molip-ai/v1/model.json
+public/molip-ai/v1/metadata.json
+```
+
+## 참고
+- 스켈레톤 및 몰입 상태 표시는 타이머 실행 중에만 렌더링됩니다.
+- 자동 정지 카운트다운은 미집중 상태에서만 표시됩니다.

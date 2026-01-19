@@ -19,11 +19,12 @@
 
 .timer-layout {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 500px 420px;
   gap: 32px;
-  width: 100%;
-  max-width: 1100px;
-  padding: 32px;
+  width: 936px;
+  max-width: none;
+  padding: 16px 0;
+  margin: 0 auto;
 }
 
 .ai-panel {
@@ -37,13 +38,13 @@
 
 .video-wrapper {
   position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 3;
+  width: 360px;
+  height: 270px;
   background: #000;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  margin-bottom: 24px;
+  margin: 0 0 16px;
 }
 
 .ai-video {
@@ -56,6 +57,11 @@
   transform: scaleX(-1); /* 거울 모드 */
 }
 
+.ai-video.is-idle {
+  filter: blur(2px) brightness(0.85);
+  opacity: 0.5;
+}
+
 .ai-canvas {
   position: absolute;
   inset: 0;
@@ -64,6 +70,37 @@
   pointer-events: none;
   z-index: 2;
   transform: scaleX(-1); /* 영상과 동일한 좌우 반전 */
+}
+
+.ai-canvas.is-hidden {
+  opacity: 0;
+}
+
+.ai-start-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  text-align: center;
+  color: #111827;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(6px);
+}
+
+.ai-overlay-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.ai-overlay-sub {
+  font-size: 13px;
+  color: #475569;
+  max-width: 240px;
 }
 
 .ai-status-badge {
@@ -93,14 +130,59 @@
   border: 2px solid #ef4444;
 }
 
-.ai-countdown {
-  font-size: 18px;
-  color: #555;
+.ai-countdown-card {
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-top: 0;
+  background: linear-gradient(135deg, #fff7ed, #fff1f2);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  box-shadow: 0 10px 20px rgba(239, 68, 68, 0.08);
+  text-align: center;
+  width: 240px;
+  min-height: 108px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
-.ai-countdown strong {
-  font-size: 28px;
+.ai-countdown-label {
+  font-size: 14px;
+  color: #7c2d12;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.ai-countdown-value {
+  font-size: 34px;
+  font-weight: 800;
   color: #ef4444;
+  margin-top: 6px;
+}
+
+.motivation-footer {
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 16px;
+  padding: 20px 24px 8px;
+  text-align: center;
+  color: #111827;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.motivation-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #9ca3af;
+}
+
+.motivation-text {
+  margin-top: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
 }
 
 .quote {
@@ -118,11 +200,39 @@
 }
 
 .timer-card {
-  padding: 56px 56px 48px;
+  padding: 44px 48px 28px;
   min-width: 360px;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.timer-card.fixed-panel {
+  width: 500px;
+  min-height: 540px;
+}
+
+.timer-card.fixed-media {
+  width: 420px;
+  min-height: 480px;
+}
+
+.countdown-slot {
+  min-height: 108px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.countdown-slot.is-hidden .ai-countdown-card {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  pointer-events: none;
+}
+
+.countdown-slot.is-active .ai-countdown-card {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 .timer-time {
@@ -151,6 +261,62 @@
 
 .timer-settings-text:hover {
   color: #4f46e5;
+}
+
+/* ===== Settings ===== */
+
+.settings-card {
+  padding: 48px 56px;
+  max-width: 860px;
+  width: 100%;
+  text-align: left;
+}
+
+.settings-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.settings-section {
+  background: #f8fafc;
+  border-radius: 18px;
+  padding: 20px 22px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.settings-section h2 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.settings-wide {
+  margin-top: 24px;
+}
+
+.settings-help {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.settings-preview {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #475569;
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
 }
 
 /* ===== Button System ===== */

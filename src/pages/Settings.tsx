@@ -1,66 +1,114 @@
 import { useState } from 'react';
-import { Form, InputGroup } from 'react-bootstrap';
+import { Alert, Form, InputGroup } from 'react-bootstrap';
 
-function applySettings(
-  newName: string,
-  pauseMinutes: number,
-  setName: (v: string) => void
-) {
-  const finalName = newName.trim() || 'Guest';
-  setName(finalName);
-  localStorage.setItem('nickname', finalName);
-  localStorage.setItem('pauseMinutes', String(pauseMinutes));
-  alert('설정이 저장되었습니다.');
-}
+const DEFAULT_MOTIVATION = '지금 이 순간이 가장 소중하다';
+const DEFAULT_PAUSE_SECONDS = 30;
+
+const getInitialPauseSeconds = () => {
+  const storedSeconds = Number(localStorage.getItem('pauseSeconds'));
+  if (!Number.isNaN(storedSeconds) && storedSeconds > 0) {
+    return storedSeconds;
+  }
+  const legacy = Number(localStorage.getItem('pauseMinutes') || 5);
+  const mapping: Record<number, number> = {
+    3: 15,
+    5: 30,
+    10: 60,
+    15: 120,
+  };
+  return mapping[legacy] ?? DEFAULT_PAUSE_SECONDS;
+};
 
 function Settings() {
   const savedName = localStorage.getItem('nickname') || 'Guest';
+  const savedMotivation = localStorage.getItem('motivationText') || DEFAULT_MOTIVATION;
   const [name, setName] = useState(savedName);
   const [inputName, setInputName] = useState(savedName);
-  const [pauseMinutes, setPauseMinutes] = useState<number>(5);
+  const [pauseSeconds, setPauseSeconds] = useState<number>(getInitialPauseSeconds());
+  const [motivationText, setMotivationText] = useState(savedMotivation);
+  const [showSavedAlert, setShowSavedAlert] = useState(false);
+
+  const applySettings = () => {
+    const finalName = inputName.trim() || 'Guest';
+    setName(finalName);
+    localStorage.setItem('nickname', finalName);
+    localStorage.setItem('pauseSeconds', String(pauseSeconds));
+    localStorage.setItem('motivationText', motivationText.trim() || DEFAULT_MOTIVATION);
+    setShowSavedAlert(true);
+  };
 
   return (
     <div className="page-center">
-      <div className="card timer-card">
-        <h1 className="title">설정</h1>
+      <div className="card settings-card">
+        <div className="settings-header">
+          <h1 className="title">설정</h1>
+          <p className="description">몰입 환경을 내 스타일로 세팅하세요.</p>
+        </div>
 
-        <p className="description">
-          아래에 귀하의 <strong>닉네임</strong>을 입력해 주세요!
-        </p>
-
-        <p className="description">
-          현재 닉네임은 <strong>{name}</strong>입니다.
-        </p>
-
-        <InputGroup className="mb-3">
-          <InputGroup.Text>닉네임</InputGroup.Text>
-          <Form.Control
-            value={inputName}
-            onChange={(e) => setInputName(e.target.value)}
-          />
-        </InputGroup>
-
-        <Form.Group className="mb-3">
-          <Form.Label>미집중 시 자동 정지 시간</Form.Label>
-          <Form.Select
-            value={pauseMinutes}
-            onChange={(e) => setPauseMinutes(Number(e.target.value))}
+        {showSavedAlert && (
+          <Alert
+            variant="success"
+            dismissible
+            onClose={() => setShowSavedAlert(false)}
+            className="text-center fw-bold shadow-sm"
           >
-            <option value={3}>15초</option>
-            <option value={5}>30초</option>
-            <option value={10}>1분</option>
-            <option value={15}>2분</option>
-          </Form.Select>
-        </Form.Group>
+            설정이 저장되었습니다.
+          </Alert>
+        )}
 
-        <button
-          className="btn btn-primary btn-sm"
-          onClick={() => {
-            applySettings(inputName, pauseMinutes, setName);
-          }}
-        >
-          저장
-        </button>
+        <div className="settings-grid">
+          <div className="settings-section">
+            <h2>프로필</h2>
+            <p className="settings-help">타이머에 표시될 닉네임을 정하세요.</p>
+            <InputGroup className="mb-3">
+              <InputGroup.Text>닉네임</InputGroup.Text>
+              <Form.Control
+                value={inputName}
+                onChange={(e) => setInputName(e.target.value)}
+              />
+            </InputGroup>
+            <div className="settings-preview">
+              현재 닉네임: <strong>{name}</strong>
+            </div>
+          </div>
+
+          <div className="settings-section">
+            <h2>타이머</h2>
+            <p className="settings-help">미집중 상태가 지속되면 자동으로 타이머를 멈춥니다.</p>
+            <Form.Group className="mb-3">
+              <Form.Label>미집중 자동 정지 시간</Form.Label>
+              <Form.Select
+                value={pauseSeconds}
+                onChange={(e) => setPauseSeconds(Number(e.target.value))}
+              >
+                <option value={15}>15초</option>
+                <option value={30}>30초</option>
+                <option value={60}>1분</option>
+                <option value={120}>2분</option>
+              </Form.Select>
+            </Form.Group>
+            <div className="settings-preview">
+              현재 설정: <strong>{Math.floor(pauseSeconds / 60)}분 {pauseSeconds % 60}초</strong>
+            </div>
+          </div>
+        </div>
+
+        <div className="settings-section settings-wide">
+          <h2>동기부여 문구</h2>
+          <p className="settings-help">타이머 화면 하단에 표시됩니다.</p>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            value={motivationText}
+            onChange={(e) => setMotivationText(e.target.value)}
+          />
+        </div>
+
+        <div className="settings-actions">
+          <button className="btn btn-primary" onClick={applySettings}>
+            저장
+          </button>
+        </div>
       </div>
     </div>
   );

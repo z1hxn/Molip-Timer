@@ -11,9 +11,96 @@ function Timer() {
 
   const [aiStatus, setAiStatus] = useState('AI 모델 로딩 중입니다');
   const [model, setModel] = useState<tmPose.CustomPoseNet | null>(null);
-  const { focusTime, totalTime, isRunning, toggle, reset, formatTime } = useTimer(aiStatus === '몰입 중');
+  const { focusTime, totalTime, isRunning, toggle, reset, stop, formatTime } = useTimer(aiStatus === '몰입 중');
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const countdownRef = useRef<number | null>(null);
+  const [pauseSeconds, setPauseSeconds] = useState(30);
+  const [countdownSeconds, setCountdownSeconds] = useState(30);
+  const [showAutoStopAlert, setShowAutoStopAlert] = useState(false);
+  const [showAiAlert, setShowAiAlert] = useState(true);
+  const [showStartHint, setShowStartHint] = useState(true);
+  const [motivationText, setMotivationText] = useState(
+    localStorage.getItem('motivationText') || '지금 이 순간이 가장 소중하다'
+  );
+
+  const formatCountdown = (seconds: number) => {
+    const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    return `${m}:${s}`;
+  };
+
+  const getPauseSeconds = () => {
+    const storedSeconds = Number(localStorage.getItem('pauseSeconds'));
+    if (!Number.isNaN(storedSeconds) && storedSeconds > 0) {
+      return storedSeconds;
+    }
+    const raw = Number(localStorage.getItem('pauseMinutes') || 5);
+    const mapping: Record<number, number> = {
+      3: 15,
+      5: 30,
+      10: 60,
+      15: 120,
+    };
+    return mapping[raw] ?? raw;
+  };
+
+  useEffect(() => {
+    const updateSettings = () => {
+      const next = getPauseSeconds();
+      setPauseSeconds(next);
+      setCountdownSeconds(next);
+      setMotivationText(localStorage.getItem('motivationText') || '지금 이 순간이 가장 소중하다');
+    };
+    updateSettings();
+    window.addEventListener('focus', updateSettings);
+    window.addEventListener('storage', updateSettings);
+    return () => {
+      window.removeEventListener('focus', updateSettings);
+      window.removeEventListener('storage', updateSettings);
+    };
+  }, []);
+
+  useEffect(() => {
+    setCountdownSeconds(pauseSeconds);
+  }, [pauseSeconds]);
+
+  useEffect(() => {
+    if (!isRunning || aiStatus !== '미집중') {
+      if (countdownRef.current !== null) {
+        clearInterval(countdownRef.current);
+        countdownRef.current = null;
+      }
+      setCountdownSeconds(pauseSeconds);
+      return;
+    }
+
+    if (countdownRef.current !== null) {
+      clearInterval(countdownRef.current);
+    }
+
+    countdownRef.current = window.setInterval(() => {
+      setCountdownSeconds((prev) => {
+        if (prev <= 1) {
+          if (countdownRef.current !== null) {
+            clearInterval(countdownRef.current);
+            countdownRef.current = null;
+          }
+          setShowAutoStopAlert(true);
+          stop();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (countdownRef.current !== null) {
+        clearInterval(countdownRef.current);
+        countdownRef.current = null;
+      }
+    };
+  }, [aiStatus, isRunning, pauseSeconds, stop]);
 
   useEffect(() => {
     const loadModel = async () => {
@@ -36,6 +123,10 @@ function Timer() {
     };
     loadModel();
   }, []);
+
+  useEffect(() => {
+    setShowAiAlert(true);
+  }, [aiStatus]);
 
   useEffect(() => {
     // 웹캠 연결 시작
@@ -63,6 +154,17 @@ function Timer() {
     const predict = async () => {
       if (video.videoWidth > 0 && video.videoHeight > 0) {
         try {
+          if (!isRunning) {
+            if (canvasRef.current) {
+              const canvas = canvasRef.current;
+              const ctx = canvas.getContext('2d');
+              if (ctx) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+              }
+            }
+            animationId = requestAnimationFrame(predict);
+            return;
+          }
           const { pose, posenetOutput } = await model.estimatePose(video);
           if (canvasRef.current) {
             const canvas = canvasRef.current;
@@ -103,22 +205,41 @@ function Timer() {
 
     predict();
     return () => cancelAnimationFrame(animationId);
-  }, [model]);
+  }, [isRunning, model]);
 
   // 시스템 상태(로딩, 에러)인지 판단
   const isSystemState = ['AI 모델 로딩 중입니다', '카메라를 사용할 수 없습니다', 'AI 모델에 오류가 발생했습니다'].includes(aiStatus);
 
   return (
     <div className="page-center" style={{ flexDirection: 'column' }}>
-      {isSystemState && <div style={{ width: '100%', maxWidth: '1100px', marginBottom: '20px' }}>
-        <Alert variant={aiStatus === 'AI 모델 로딩 중입니다' ? 'info' : 'danger'} className="text-center fw-bold shadow-sm">
-          {aiStatus}
-        </Alert>
-      </div>}
+      {(isSystemState || showAutoStopAlert) && (
+        <div style={{ width: '100%', maxWidth: '1100px', marginBottom: '20px' }}>
+          {showAutoStopAlert && (
+            <Alert
+              variant="warning"
+              dismissible
+              onClose={() => setShowAutoStopAlert(false)}
+              className="text-center fw-bold shadow-sm"
+            >
+              미집중 상태가 계속되어 타이머가 정지되었습니다.
+            </Alert>
+          )}
+          {isSystemState && showAiAlert && (
+            <Alert
+              variant={aiStatus === 'AI 모델 로딩 중입니다' ? 'info' : 'danger'}
+              dismissible
+              onClose={() => setShowAiAlert(false)}
+              className="text-center fw-bold shadow-sm"
+            >
+              {aiStatus}
+            </Alert>
+          )}
+        </div>
+      )}
 
       <div className="timer-layout">
 
-        <div className="card timer-card">
+        <div className="card timer-card fixed-panel">
           <div className="timer-nickname">
             {nickname}
           </div>
@@ -151,30 +272,41 @@ function Timer() {
             설정
           </button>
         </div>
-        <div className="card timer-card">
+        <div className="card timer-card fixed-media">
           <div className="video-wrapper">
             <video
               ref={videoRef}
               autoPlay
               muted
               playsInline
-              className="ai-video"
+              className={`ai-video ${isRunning ? '' : 'is-idle'}`}
             />
-            <canvas ref={canvasRef} className="ai-canvas" />
-            {!isSystemState && (
+            <canvas ref={canvasRef} className={`ai-canvas ${isRunning ? '' : 'is-hidden'}`} />
+            {!isRunning && !isSystemState && showStartHint && (
+              <div className="ai-start-overlay">
+                <div className="ai-overlay-title">타이머를 시작해 주세요</div>
+                <div className="ai-overlay-sub">
+                  시작하면 몰입 상태를 판독하고 스켈레톤을 표시합니다.
+                </div>
+              </div>
+            )}
+            {isRunning && !isSystemState && (
               <div className={`ai-status-badge ${aiStatus === '몰입 중' ? 'status-focused' : 'status-unfocused'}`}>
                 {aiStatus}
               </div>
             )}
           </div>
-          <div className="ai-countdown">타이머 정지까지</div>
-          <div className="ai-countdown">
-            <strong>16</strong>
-          </div>
-          <div className="ai-quote">
-            "지금 이 순간이 가장 소중하다"
+          <div className={`countdown-slot ${isRunning && aiStatus === '미집중' ? 'is-active' : 'is-hidden'}`}>
+            <div className="ai-countdown-card">
+              <div className="ai-countdown-label">타이머 정지까지</div>
+              <div className="ai-countdown-value">{formatCountdown(countdownSeconds)}</div>
+            </div>
           </div>
         </div>
+      </div>
+      <div className="motivation-footer">
+        <div className="motivation-label">오늘의 문구</div>
+        <div className="motivation-text">"{motivationText}"</div>
       </div>
     </div>
   );
