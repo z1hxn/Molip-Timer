@@ -19,7 +19,7 @@ function Timer() {
   const [countdownSeconds, setCountdownSeconds] = useState(30);
   const [showAutoStopAlert, setShowAutoStopAlert] = useState(false);
   const [showAiAlert, setShowAiAlert] = useState(true);
-  const [showStartHint, setShowStartHint] = useState(true);
+  const [showStartHint] = useState(true);
   const [motivationText, setMotivationText] = useState(
     localStorage.getItem('motivationText') || '지금 이 순간이 가장 소중하다'
   );
