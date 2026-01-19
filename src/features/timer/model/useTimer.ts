@@ -1,14 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 
 export function useTimer() {
-  const [time, setTime] = useState(0);
+  const [focusTime, setFocusTime] = useState(0);
+  const [totalTime, setTotalTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (isRunning) {
       timerRef.current = window.setInterval(() => {
-        setTime(prev => prev + 1);
+        setFocusTime(prev => prev + 1);
+        setTotalTime(prev => prev + 1);
       }, 1000);
     } else {
       if (timerRef.current !== null) {
@@ -31,7 +33,8 @@ export function useTimer() {
 
   const reset = () => {
     setIsRunning(false);
-    setTime(0);
+    setFocusTime(0);
+    setTotalTime(0);
   };
 
   const formatTime = (seconds: number) => {
@@ -42,7 +45,8 @@ export function useTimer() {
   };
 
   return {
-    time,
+    focusTime,
+    totalTime,
     isRunning,
     toggle,
     reset,

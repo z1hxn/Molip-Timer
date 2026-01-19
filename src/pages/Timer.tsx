@@ -5,7 +5,7 @@ function Timer() {
   const navigate = useNavigate();
   const nickname = localStorage.getItem('nickname') || 'Guest';
 
-  const { time, isRunning, toggle, reset, formatTime } = useTimer();
+  const { focusTime, totalTime, isRunning, toggle, reset, formatTime } = useTimer();
 
   return (
     <div className="page-center">
@@ -15,7 +15,14 @@ function Timer() {
           <div className="timer-nickname">
             {nickname}
           </div>
-          <div className="timer-time">{formatTime(time)}</div>
+          
+          <div style={{ marginBottom: '1rem', color: '#6c757d' }}>
+            <small>총 경과 시간</small>
+            <div style={{ fontSize: '1.5rem', fontWeight: 600 }}>{formatTime(totalTime)}</div>
+          </div>
+
+          <div style={{ color: '#6c757d' }}><small>몰입 시간</small></div>
+          <div className="timer-time">{formatTime(focusTime)}</div>
 
           <div className="timer-buttons">
             <button

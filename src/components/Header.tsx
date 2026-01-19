@@ -5,23 +5,23 @@ function Header() {
   const navigate = useNavigate();
 
   return (
-    <Navbar bg="light" data-bs-theme="light" className="mb-4">
+    <Navbar expand="lg" className="mb-4 shadow-sm bg-white py-3">
       <Container>
-        <Navbar.Brand href="/">
+        <Navbar.Brand onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
           <img
-            alt=""
-            src="/logo.png"
-            width="30"
-            height="30"
-            className="d-inline-block align-top me-2"
-          />몰입 타이머</Navbar.Brand>
+            alt="Molip Timer"
+            src="/text-kr.png"
+            height="32"
+            className="d-inline-block align-top"
+          />
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-
-            <Nav.Link onClick={() => { navigate('/') }}>홈</Nav.Link>
-            <Nav.Link onClick={() => { navigate('/timer') }}>타이머</Nav.Link>
-            <Nav.Link onClick={() => { navigate('/settings') }}>설정</Nav.Link>
-            <Nav.Link onClick={() => { navigate('./history')}}>기록</Nav.Link>
+          <Nav className="ms-auto">
+            <Nav.Link className="mx-2 fw-medium" onClick={() => navigate('/')}>홈</Nav.Link>
+            <Nav.Link className="mx-2 fw-medium" onClick={() => navigate('/timer')}>타이머</Nav.Link>
+            <Nav.Link className="mx-2 fw-medium" onClick={() => navigate('/history')}>기록</Nav.Link>
+            <Nav.Link className="mx-2 fw-medium" onClick={() => navigate('/settings')}>설정</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
