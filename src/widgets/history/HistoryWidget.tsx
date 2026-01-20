@@ -1,4 +1,4 @@
-function HistoryEmptyState() {
+function HistoryWidget() {
   return (
     <div className="page-center">
       <div className="card timer-card">
@@ -11,4 +11,4 @@ function HistoryEmptyState() {
   );
 }
 
-export default HistoryEmptyState;
+export default HistoryWidget;

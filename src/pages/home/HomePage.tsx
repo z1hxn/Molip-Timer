@@ -1,7 +1,7 @@
-import { HomeHero } from '@widgets';
+import { HomeWidget } from '@widgets';
 
 function HomePage() {
-  return <HomeHero />;
+  return <HomeWidget />;
 }
 
 export default HomePage;

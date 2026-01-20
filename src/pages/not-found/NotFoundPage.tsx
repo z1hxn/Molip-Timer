@@ -1,7 +1,7 @@
-import { NotFoundCard } from '@widgets';
+import { NotFoundWidget } from '@widgets';
 
 function NotFoundPage() {
-  return <NotFoundCard />;
+  return <NotFoundWidget />;
 }
 
 export default NotFoundPage;

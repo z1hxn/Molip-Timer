@@ -1,4 +1,3 @@
-import "../App.css";
 import { Routes, Route } from "react-router-dom";
 import { Home, Timer, Settings, History, NotFound } from "@pages";
 import { Header } from "@widgets";

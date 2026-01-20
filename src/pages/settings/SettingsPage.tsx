@@ -1,7 +1,11 @@
-import { SettingsForm } from '@widgets';
+import { SettingsForm, SettingsLayout } from '@widgets';
 
 function SettingsPage() {
-  return <SettingsForm />;
+  return (
+    <SettingsLayout>
+      <SettingsForm />
+    </SettingsLayout>
+  );
 }
 
 export default SettingsPage;

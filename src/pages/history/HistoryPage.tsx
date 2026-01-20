@@ -1,7 +1,7 @@
-import { HistoryEmptyState } from '@widgets';
+import { HistoryWidget } from '@widgets';
 
 function HistoryPage() {
-  return <HistoryEmptyState />;
+  return <HistoryWidget />;
 }
 
 export default HistoryPage;

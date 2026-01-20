@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 
-function HomeHero() {
+function HomeWidget() {
   const navigate = useNavigate();
 
   return (
     <div className="page-center">
       <div className="card home-card">
-        <img src="logo.png" className="home-logo" />
+        <img src="logo.png" className="home-logo" alt="Molip Timer" />
         <h5>공부가 이어지는 리듬</h5>
         <h1 className="title">몰입 타이머</h1>
 
@@ -30,4 +30,4 @@ function HomeHero() {
   );
 }
 
-export default HomeHero;
+export default HomeWidget;
