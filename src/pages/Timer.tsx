@@ -4,6 +4,8 @@ import { Alert } from 'react-bootstrap';
 import { useTimer } from '@features/timer';
 import * as tmPose from '@teachablemachine/pose';
 import * as tf from '@tensorflow/tfjs';
+import '@tensorflow/tfjs-backend-webgl';
+import '@tensorflow/tfjs-backend-cpu';
 
 function Timer() {
   const navigate = useNavigate();
