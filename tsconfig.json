@@ -14,13 +14,12 @@
     "@features": ["src/features/index.ts"],
     "@features/*": ["src/features/*"],
 
-    "@components": ["src/components/index.ts"],
-    "@components/*": ["src/components/*"],
-    
     "@shared/*": ["src/shared/*"],
 
     "@UI/*": ["src/UI/*"],
+
+    "@widgets": ["src/widgets/index.ts"],
+    "@widgets/*": ["src/widgets/*"],
     }
   }
 }
-

@@ -17,8 +17,8 @@ export default defineConfig({
     alias: {
       '@features': path.resolve(__dirname, 'src/features'),
       '@pages': path.resolve(__dirname, 'src/pages'),
-      '@components': path.resolve(__dirname, 'src/components'),
       '@shared': path.resolve(__dirname, 'src/shared'),
+      '@widgets': path.resolve(__dirname, 'src/widgets'),
     },
   },
 })

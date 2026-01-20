@@ -19,7 +19,7 @@ const getInitialPauseSeconds = () => {
   return mapping[legacy] ?? DEFAULT_PAUSE_SECONDS;
 };
 
-function Settings() {
+function SettingsForm() {
   const savedName = localStorage.getItem('nickname') || 'Guest';
   const savedMotivation = localStorage.getItem('motivationText') || DEFAULT_MOTIVATION;
   const [name, setName] = useState(savedName);
@@ -62,10 +62,7 @@ function Settings() {
             <p className="settings-help">타이머에 표시될 닉네임을 정하세요.</p>
             <InputGroup className="mb-3">
               <InputGroup.Text>닉네임</InputGroup.Text>
-              <Form.Control
-                value={inputName}
-                onChange={(e) => setInputName(e.target.value)}
-              />
+              <Form.Control value={inputName} onChange={(e) => setInputName(e.target.value)} />
             </InputGroup>
             <div className="settings-preview">
               현재 닉네임: <strong>{name}</strong>
@@ -77,10 +74,7 @@ function Settings() {
             <p className="settings-help">미집중 상태가 지속되면 자동으로 타이머를 멈춥니다.</p>
             <Form.Group className="mb-3">
               <Form.Label>미집중 자동 정지 시간</Form.Label>
-              <Form.Select
-                value={pauseSeconds}
-                onChange={(e) => setPauseSeconds(Number(e.target.value))}
-              >
+              <Form.Select value={pauseSeconds} onChange={(e) => setPauseSeconds(Number(e.target.value))}>
                 <option value={15}>15초</option>
                 <option value={30}>30초</option>
                 <option value={60}>1분</option>
@@ -114,4 +108,4 @@ function Settings() {
   );
 }
 
-export default Settings;
+export default SettingsForm;
