@@ -10,6 +10,7 @@ function Timer() {
   const nickname = localStorage.getItem('nickname') || 'Guest';
 
   const [aiStatus, setAiStatus] = useState('AI 모델 로딩 중입니다');
+  const [aiConfidence, setAiConfidence] = useState<number | null>(null);
   const [model, setModel] = useState<tmPose.CustomPoseNet | null>(null);
   const { focusTime, totalTime, isRunning, toggle, reset, stop, formatTime } = useTimer(aiStatus === '몰입 중');
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -23,6 +24,24 @@ function Timer() {
   const [motivationText, setMotivationText] = useState(
     localStorage.getItem('motivationText') || '지금 이 순간이 가장 소중하다'
   );
+  const keypointPairs: Array<[number, number]> = [
+    [0, 1],
+    [0, 2],
+    [1, 3],
+    [2, 4],
+    [5, 6],
+    [5, 7],
+    [7, 9],
+    [6, 8],
+    [8, 10],
+    [5, 11],
+    [6, 12],
+    [11, 12],
+    [11, 13],
+    [13, 15],
+    [12, 14],
+    [14, 16],
+  ];
 
   const formatCountdown = (seconds: number) => {
     const m = String(Math.floor(seconds / 60)).padStart(2, '0');
@@ -166,38 +185,118 @@ function Timer() {
             return;
           }
           const { pose, posenetOutput } = await model.estimatePose(video);
+          const hasKeypoints = Boolean(pose?.keypoints && pose.keypoints.length > 0);
+          if (!hasKeypoints) {
+            setAiStatus((prev) => (prev === '미집중' ? prev : '미집중'));
+            setAiConfidence(null);
+            animationId = requestAnimationFrame(predict);
+            return;
+          }
           if (canvasRef.current) {
             const canvas = canvasRef.current;
             const ctx = canvas.getContext('2d');
             if (ctx) {
-              if (canvas.width !== video.videoWidth) {
-                canvas.width = video.videoWidth;
+              const displayWidth = video.clientWidth || video.videoWidth;
+              const displayHeight = video.clientHeight || video.videoHeight;
+              if (canvas.width !== displayWidth) {
+                canvas.width = displayWidth;
               }
-              if (canvas.height !== video.videoHeight) {
-                canvas.height = video.videoHeight;
+              if (canvas.height !== displayHeight) {
+                canvas.height = displayHeight;
               }
+              const scaleX = video.videoWidth ? displayWidth / video.videoWidth : 1;
+              const scaleY = video.videoHeight ? displayHeight / video.videoHeight : 1;
               ctx.clearRect(0, 0, canvas.width, canvas.height);
-              tmPose.drawKeypoints(pose.keypoints, 0.2, ctx);
-              tmPose.drawSkeleton(pose.keypoints, 0.2, ctx);
+              const minConfidence = 0.05;
+              ctx.strokeStyle = '#22c55e';
+              ctx.fillStyle = '#22c55e';
+              ctx.lineWidth = 2;
+              pose.keypoints.forEach((kp) => {
+                const score = typeof kp.score === 'number' ? kp.score : 0;
+                let x = typeof kp.x === 'number' ? kp.x : kp.position?.x;
+                let y = typeof kp.y === 'number' ? kp.y : kp.position?.y;
+                if (typeof x === 'number' && typeof y === 'number') {
+                  if (x <= 1 && y <= 1) {
+                    x *= displayWidth;
+                    y *= displayHeight;
+                  } else {
+                    x *= scaleX;
+                    y *= scaleY;
+                  }
+                }
+                if (score >= minConfidence && typeof x === 'number' && typeof y === 'number') {
+                  ctx.beginPath();
+                  ctx.arc(x, y, 4, 0, Math.PI * 2);
+                  ctx.fill();
+                }
+              });
+              keypointPairs.forEach(([startIdx, endIdx]) => {
+                const start = pose.keypoints[startIdx];
+                const end = pose.keypoints[endIdx];
+                if (!start || !end) return;
+                const startScore = typeof start.score === 'number' ? start.score : 0;
+                const endScore = typeof end.score === 'number' ? end.score : 0;
+                let startX = typeof start.x === 'number' ? start.x : start.position?.x;
+                let startY = typeof start.y === 'number' ? start.y : start.position?.y;
+                let endX = typeof end.x === 'number' ? end.x : end.position?.x;
+                let endY = typeof end.y === 'number' ? end.y : end.position?.y;
+                if (typeof startX === 'number' && typeof startY === 'number') {
+                  if (startX <= 1 && startY <= 1) {
+                    startX *= displayWidth;
+                    startY *= displayHeight;
+                  } else {
+                    startX *= scaleX;
+                    startY *= scaleY;
+                  }
+                }
+                if (typeof endX === 'number' && typeof endY === 'number') {
+                  if (endX <= 1 && endY <= 1) {
+                    endX *= displayWidth;
+                    endY *= displayHeight;
+                  } else {
+                    endX *= scaleX;
+                    endY *= scaleY;
+                  }
+                }
+                if (
+                  startScore >= minConfidence &&
+                  endScore >= minConfidence &&
+                  typeof startX === 'number' &&
+                  typeof startY === 'number' &&
+                  typeof endX === 'number' &&
+                  typeof endY === 'number'
+                ) {
+                  ctx.beginPath();
+                  ctx.moveTo(startX, startY);
+                  ctx.lineTo(endX, endY);
+                  ctx.stroke();
+                }
+              });
             }
           }
 
           try {
-            const prediction = await model.predictTopK(posenetOutput);
-            if (prediction.length > 0) {
-              const topClass = prediction.reduce((prev, current) =>
-                prev.probability > current.probability ? prev : current
-              );
-              const newStatus = topClass.className === 'Studying' ? "몰입 중" : "미집중";
-              setAiStatus(prev => prev === newStatus ? prev : newStatus);
+            if (posenetOutput) {
+              const prediction = await model.predictTopK(posenetOutput);
+              if (prediction.length > 0) {
+                const topClass = prediction.reduce((prev, current) =>
+                  prev.probability > current.probability ? prev : current
+                );
+                const studying = prediction.find((item) => item.className === 'Studying');
+                const newStatus = topClass.className === 'Studying' ? "몰입 중" : "미집중";
+                setAiStatus(prev => prev === newStatus ? prev : newStatus);
+                setAiConfidence(studying ? studying.probability : null);
+              }
             }
           } catch (err) {
             console.error("AI 예측 에러:", err);
             setAiStatus("AI 모델에 오류가 발생했습니다");
+            setAiConfidence(null);
           }
         } catch (err) {
           console.error("AI 예측 에러:", err);
           setAiStatus("AI 모델에 오류가 발생했습니다");
+          setAiConfidence(null);
         }
       }
       animationId = requestAnimationFrame(predict);
@@ -256,12 +355,12 @@ function Timer() {
             <button
               className={`btn ${isRunning ? 'btn-danger' : 'btn-primary'}`}
               onClick={toggle}>
-              { isRunning? '정지' : totalTime > 0 ? '몰입 재시작' : '몰입 시작' }
+              { isRunning ? '몰입 정지' : totalTime > 0 ? '몰입 재시작' : '몰입 시작' }
             </button>
 
             {!isRunning && totalTime > 0 && (
               <button className="btn btn-ghost" onClick={reset}>
-                리셋
+                종료
               </button>
             )}
           </div>
@@ -300,6 +399,12 @@ function Timer() {
             <div className="ai-countdown-card">
               <div className="ai-countdown-label">타이머 정지까지</div>
               <div className="ai-countdown-value">{formatCountdown(countdownSeconds)}</div>
+            </div>
+          </div>
+          <div style={{ marginTop: '0.5rem', color: '#6c757d', textAlign: 'center' }}>
+            <small>AI 집중도</small>
+            <div style={{ fontSize: '1rem', fontWeight: 600 }}>
+              {aiConfidence === null ? '--' : `${(aiConfidence * 100).toFixed(1)}%`}
             </div>
           </div>
         </div>

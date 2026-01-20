@@ -12,6 +12,7 @@ function Header() {
             alt="Molip Timer"
             src="/text-kr.png"
             height="32"
+            style={{ transform: 'scale(1.25)', transformOrigin: 'left center' }}
             className="d-inline-block align-top"
           />
         </Navbar.Brand>
