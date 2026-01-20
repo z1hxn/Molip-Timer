@@ -210,11 +210,15 @@
 .timer-card.fixed-panel {
   width: 500px;
   min-height: 540px;
+  justify-content: center;
+  gap: 12px;
 }
 
 .timer-card.fixed-media {
   width: 420px;
   min-height: 480px;
+  padding: 40px 40px 36px;
+  gap: 14px;
 }
 
 .countdown-slot {
@@ -222,6 +226,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 8px;
 }
 
 .countdown-slot.is-hidden .ai-countdown-card {
@@ -251,16 +256,37 @@
 }
 
 .timer-settings-text {
-  background: none;
-  border: none;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   font-size: 13px;
-  color: #999;
+  color: #64748b;
   cursor: pointer;
-  margin-top: 8px;
+  margin-top: 10px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 600;
 }
 
 .timer-settings-text:hover {
   color: #4f46e5;
+  border-color: #c7d2fe;
+  background: #eef2ff;
+}
+
+.ai-guide {
+  margin-top: 4px;
+  margin-bottom: 6px;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  max-width: 320px;
+}
+
+.ai-confidence {
+  margin-top: 6px;
+  text-align: center;
+  color: #6c757d;
 }
 
 /* ===== Settings ===== */

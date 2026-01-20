@@ -9,6 +9,19 @@ function Timer() {
   const navigate = useNavigate();
   const nickname = localStorage.getItem('nickname') || 'Guest';
 
+  type PoseKeypoint = {
+    position?: { x?: number; y?: number };
+    score?: number;
+    x?: number;
+    y?: number;
+  };
+  const getPoint = (kp: PoseKeypoint) => {
+    const rawX = (kp as { x?: number; position?: { x?: number } }).x ?? kp.position?.x;
+    const rawY = (kp as { y?: number; position?: { y?: number } }).y ?? kp.position?.y;
+    const score = typeof kp.score === 'number' ? kp.score : 0;
+    return { x: rawX, y: rawY, score };
+  };
+
   const [aiStatus, setAiStatus] = useState('AI 모델 로딩 중입니다');
   const [aiConfidence, setAiConfidence] = useState<number | null>(null);
   const [model, setModel] = useState<tmPose.CustomPoseNet | null>(null);
@@ -212,9 +225,8 @@ function Timer() {
               ctx.fillStyle = '#22c55e';
               ctx.lineWidth = 2;
               pose.keypoints.forEach((kp) => {
-                const score = typeof kp.score === 'number' ? kp.score : 0;
-                let x = typeof kp.x === 'number' ? kp.x : kp.position?.x;
-                let y = typeof kp.y === 'number' ? kp.y : kp.position?.y;
+                const { score } = getPoint(kp);
+                let { x, y } = getPoint(kp);
                 if (typeof x === 'number' && typeof y === 'number') {
                   if (x <= 1 && y <= 1) {
                     x *= displayWidth;
@@ -234,12 +246,14 @@ function Timer() {
                 const start = pose.keypoints[startIdx];
                 const end = pose.keypoints[endIdx];
                 if (!start || !end) return;
-                const startScore = typeof start.score === 'number' ? start.score : 0;
-                const endScore = typeof end.score === 'number' ? end.score : 0;
-                let startX = typeof start.x === 'number' ? start.x : start.position?.x;
-                let startY = typeof start.y === 'number' ? start.y : start.position?.y;
-                let endX = typeof end.x === 'number' ? end.x : end.position?.x;
-                let endY = typeof end.y === 'number' ? end.y : end.position?.y;
+                const startPoint = getPoint(start);
+                const endPoint = getPoint(end);
+                const startScore = startPoint.score;
+                const endScore = endPoint.score;
+                let startX = startPoint.x;
+                let startY = startPoint.y;
+                let endX = endPoint.x;
+                let endY = endPoint.y;
                 if (typeof startX === 'number' && typeof startY === 'number') {
                   if (startX <= 1 && startY <= 1) {
                     startX *= displayWidth;
@@ -395,18 +409,22 @@ function Timer() {
               </div>
             )}
           </div>
+          <div className="ai-guide">
+            얼굴·상체가 프레임 중앙에 들어오고, 책상 높이보다 약간 위 각도에서 촬영하면 정확도가 높아요.
+          </div>
+          <div className="ai-confidence">
+            <small>AI 집중도</small>
+            <div style={{ fontSize: '1rem', fontWeight: 600 }}>
+              {aiConfidence === null ? '--' : `${(aiConfidence * 100).toFixed(1)}%`}
+            </div>
+          </div>
           <div className={`countdown-slot ${isRunning && aiStatus === '미집중' ? 'is-active' : 'is-hidden'}`}>
             <div className="ai-countdown-card">
               <div className="ai-countdown-label">타이머 정지까지</div>
               <div className="ai-countdown-value">{formatCountdown(countdownSeconds)}</div>
             </div>
           </div>
-          <div style={{ marginTop: '0.5rem', color: '#6c757d', textAlign: 'center' }}>
-            <small>AI 집중도</small>
-            <div style={{ fontSize: '1rem', fontWeight: 600 }}>
-              {aiConfidence === null ? '--' : `${(aiConfidence * 100).toFixed(1)}%`}
-            </div>
-          </div>
+
         </div>
       </div>
       <div className="motivation-footer">
