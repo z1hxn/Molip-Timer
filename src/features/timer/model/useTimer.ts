@@ -5,6 +5,7 @@ export function useTimer(focusActive: boolean) {
   const [totalTime, setTotalTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const timerRef = useRef<number | null>(null);
+  const sessionStartRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (isRunning) {
@@ -30,13 +31,17 @@ export function useTimer(focusActive: boolean) {
   }, [isRunning, focusActive]);
 
   const toggle = useCallback(() => {
+    if (!isRunning && totalTime === 0 && sessionStartRef.current === null) {
+      sessionStartRef.current = Date.now();
+    }
     setIsRunning(prev => !prev);
-  }, []);
+  }, [isRunning, totalTime]);
 
   const reset = useCallback(() => {
     setIsRunning(false);
     setFocusTime(0);
     setTotalTime(0);
+    sessionStartRef.current = null;
   }, []);
 
   const stop = useCallback(() => {
@@ -58,5 +63,6 @@ export function useTimer(focusActive: boolean) {
     reset,
     stop,
     formatTime,
+    sessionStartedAt: sessionStartRef.current,
   };
 }
