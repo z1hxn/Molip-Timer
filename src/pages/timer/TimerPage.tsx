@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAiPose, useAutoStopCountdown, usePauseSettings, useTimer } from '@features/timer';
+import { addHistoryEntry } from '@features/history';
 import { TimerFooter, TimerLayout, TimerMainSection } from '@widgets';
 
 function TimerPage() {
@@ -11,7 +12,7 @@ function TimerPage() {
   const [showStartHint] = useState(true);
   const [focusActive, setFocusActive] = useState(false);
   const { pauseSeconds, motivationText } = usePauseSettings();
-  const { focusTime, totalTime, isRunning, toggle, reset, stop, formatTime } = useTimer(focusActive);
+  const { focusTime, totalTime, isRunning, toggle, reset, stop, formatTime, sessionStartedAt } = useTimer(focusActive);
   const { aiStatus, aiConfidence, videoRef, canvasRef, isSystemState } = useAiPose(isRunning);
 
   const formatCountdown = (seconds: number) => {
@@ -35,6 +36,23 @@ function TimerPage() {
     setFocusActive(aiStatus === '몰입 중');
   }, [aiStatus]);
 
+  const handleReset = () => {
+    if (totalTime > 0) {
+      const endedAt = new Date();
+      const startedAt = sessionStartedAt
+        ? new Date(sessionStartedAt)
+        : new Date(endedAt.getTime() - totalTime * 1000);
+      addHistoryEntry({
+        nickname,
+        totalTime,
+        focusTime,
+        startedAt: startedAt.toISOString(),
+        endedAt: endedAt.toISOString(),
+      });
+    }
+    reset();
+  };
+
   return (
     <TimerLayout>
       <TimerMainSection
@@ -43,7 +61,7 @@ function TimerPage() {
         focusTime={focusTime}
         isRunning={isRunning}
         onToggle={toggle}
-        onReset={reset}
+        onReset={handleReset}
         onOpenSettings={() => navigate('/settings')}
         formatTime={formatTime}
         isSystemState={isSystemState}

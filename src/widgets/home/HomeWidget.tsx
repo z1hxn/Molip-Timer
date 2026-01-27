@@ -6,7 +6,7 @@ function HomeWidget() {
   return (
     <div className="page-center">
       <div className="card home-card">
-        <img src="logo.png" className="home-logo" alt="Molip Timer" />
+        <img src={`${import.meta.env.BASE_URL}logo.png`} className="home-logo" alt="Molip Timer" />
         <h5>공부가 이어지는 리듬</h5>
         <h1 className="title">몰입 타이머</h1>
 
