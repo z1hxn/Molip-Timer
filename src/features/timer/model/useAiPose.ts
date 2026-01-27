@@ -11,8 +11,8 @@ type PoseKeypoint = {
   y?: number;
 };
 
-const MODEL_URL = '/molip-ai/v1/model.json';
-const METADATA_URL = '/molip-ai/v1/metadata.json';
+const MODEL_URL = `${import.meta.env.BASE_URL}molip-ai/v1/model.json`;
+const METADATA_URL = `${import.meta.env.BASE_URL}molip-ai/v1/metadata.json`;
 const SYSTEM_STATUSES = [
   'AI 모델 로딩 중입니다',
   '카메라를 사용할 수 없습니다',

@@ -10,7 +10,7 @@ function Header() {
         <Navbar.Brand onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
           <img
             alt="Molip Timer"
-            src="/text-kr.png"
+            src={`${import.meta.env.BASE_URL}text-kr.png`}
             height="32"
             style={{ transform: 'scale(1.25)', transformOrigin: 'left center' }}
             className="d-inline-block align-top"
