@@ -8,7 +8,7 @@
   공부 자세를 판독해 **몰입 시간만 따로 집계**하는 AI 기반 집중 타이머
 
   <a href="https://molip.kro.kr" target="_blank">
-    <img src="https://img.shields.io/badge/Live%20Site-molip.kro.kr-2ea043?style=for-the-badge&logo=vercel&logoColor=white" />
+    <img src="https://img.shields.io/badge/Live%20Site-molip.kro.kr-2ea043?style=for-the-badge&logo=netlify&logoColor=white" />
   </a>
 
   <br />
