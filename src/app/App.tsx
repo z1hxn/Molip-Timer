@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Home, Timer, Settings, History, NotFound } from "@pages";
+import { Home, Timer, Settings, History, Login, NotFound } from "@pages";
 import { Header } from "@widgets";
 
 function App() {
@@ -12,6 +12,7 @@ function App() {
         <Route path="/timer" element={<Timer />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/history" element={<History />} />
+        <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

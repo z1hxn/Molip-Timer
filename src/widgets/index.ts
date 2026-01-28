@@ -3,6 +3,7 @@ export { default as Header } from './header/Header';
 export { default as HomeWidget } from './home/HomeWidget';
 export { default as HistoryWidget } from './history/HistoryWidget';
 export { default as NotFoundWidget } from './not-found/NotFoundWidget';
+export { default as LoginWidget } from './login/LoginWidget';
 
 export { default as SettingsForm } from './setttings/SettingsForm';
 export { default as SettingsLayout } from './setttings/SettingsLayout';

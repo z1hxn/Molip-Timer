@@ -51,7 +51,7 @@
     </td>
     <td align="center">
       <img src="docs/screens/history.png" alt="History View" width="420" /><br />
-      히스토리
+      기록
     </td>
   </tr>
 </table>
